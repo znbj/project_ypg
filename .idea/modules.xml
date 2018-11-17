@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/parent/parent.iml" filepath="$PROJECT_DIR$/parent/parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_common/youpingou_common.iml" filepath="$PROJECT_DIR$/parent/youpingou_common/youpingou_common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_dao/youpingou_dao.iml" filepath="$PROJECT_DIR$/parent/youpingou_dao/youpingou_dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_interface/youpingou_interface.iml" filepath="$PROJECT_DIR$/parent/youpingou_interface/youpingou_interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_pojo/youpingou_pojo.iml" filepath="$PROJECT_DIR$/parent/youpingou_pojo/youpingou_pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_buyer/youpingou_service_buyer.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_buyer/youpingou_service_buyer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_search/youpingou_service_search.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_search/youpingou_service_search.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_sellergood/youpingou_service_sellergood.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_sellergood/youpingou_service_sellergood.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_user/youpingou_service_user.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_user/youpingou_service_user.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_web_manager/youpingou_web_manager.iml" filepath="$PROJECT_DIR$/parent/youpingou_web_manager/youpingou_web_manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_web_portal/youpingou_web_portal.iml" filepath="$PROJECT_DIR$/parent/youpingou_web_portal/youpingou_web_portal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_web_shop/youpingou_web_shop.iml" filepath="$PROJECT_DIR$/parent/youpingou_web_shop/youpingou_web_shop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_web_user/youpingou_web_user.iml" filepath="$PROJECT_DIR$/parent/youpingou_web_user/youpingou_web_user.iml" />
+    </modules>
+  </component>
+</project>
