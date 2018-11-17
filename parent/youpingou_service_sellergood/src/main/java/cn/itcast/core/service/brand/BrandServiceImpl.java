@@ -10,6 +10,8 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class BrandServiceImpl implements BrandService{
 
@@ -71,5 +73,10 @@ public class BrandServiceImpl implements BrandService{
         if (ids != null && ids.length >0) {
             brandDao.deleteByPrimaryKeys(ids);
         }
+    }
+
+    @Override
+    public List<Map<String,String>> selectOptionList() {
+        return brandDao.selectOptionList();
     }
 }

@@ -46,4 +46,21 @@ public class Type_TemplateImpl implements Type_TemplateService {
     public void add(TypeTemplate typeTemplate) {
         typeTemplateDao.insertSelective(typeTemplate);
     }
+
+    /**
+     * 批量删除
+     * @param ids
+     */
+    @Transactional
+    @Override
+    public void delete(Long[] ids) {
+        if (ids != null && ids.length > 0) {
+            typeTemplateDao.deleteMany(ids);
+        }
+    }
+
+    @Override
+    public TypeTemplate findOne(Long id) {
+        return typeTemplateDao.selectByPrimaryKey(id);
+    }
 }

@@ -192,4 +192,8 @@
       </foreach>
     </where>
   </delete>
+
+  <select id="selectOptionList" resultType="map">
+    select id,name  text from tb_brand
+  </select>
 </mapper>

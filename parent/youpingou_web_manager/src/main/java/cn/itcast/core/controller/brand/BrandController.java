@@ -8,8 +8,10 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.net.idn.Punycode;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/brand")
@@ -101,5 +103,14 @@ public class BrandController {
             e.printStackTrace();
             return new Result(false,"删除失败");
         }
+    }
+
+    /**
+     * select2 查询列表
+     * @return
+     */
+    @RequestMapping("/selectOptionList.do")
+    public List<Map<String,String>> selectOptionList() {
+        return  brandService.selectOptionList();
     }
 }

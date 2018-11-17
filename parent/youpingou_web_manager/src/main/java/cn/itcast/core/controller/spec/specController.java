@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/specification")
 public class specController {
@@ -79,6 +82,11 @@ public class specController {
             e.printStackTrace();
             return new Result(false,"删除失败");
         }
+    }
+
+    @RequestMapping("/selectOptionList.do")
+    public List<Map<String,String>> selectOptionList() {
+        return specService.selectOptionList();
     }
 
 }

@@ -213,4 +213,13 @@
       custom_attribute_items = #{customAttributeItems,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteMany" parameterType="Long[]">
+    delete from tb_type_template
+    <where>
+      <foreach collection="array" item="id" open="id in (" separator="," close=")">
+        #{id}
+      </foreach>
+    </where>
+  </delete>
 </mapper>

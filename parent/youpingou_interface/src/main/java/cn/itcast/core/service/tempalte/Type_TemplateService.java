@@ -18,4 +18,8 @@ public interface Type_TemplateService {
      * @param typeTemplate
      */
     void add(TypeTemplate typeTemplate);
+    //批量删除
+    void delete(Long[] ids);
+    //
+    TypeTemplate findOne(Long id);
 }

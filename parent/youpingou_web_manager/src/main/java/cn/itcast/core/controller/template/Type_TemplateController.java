@@ -37,4 +37,19 @@ public class Type_TemplateController {
             return new Result(false,"保存失败");
         }
     }
+
+    @RequestMapping("/delete.do")
+    public Result delete(Long[] ids) {
+        try {
+            type_templateService.delete(ids);
+            return new Result(true,"删除成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"删除失败");
+        }
+    }
+    @RequestMapping("/findOne.do")
+    public TypeTemplate findOne(Long id) {
+        return type_templateService.findOne(id);
+    }
 }
