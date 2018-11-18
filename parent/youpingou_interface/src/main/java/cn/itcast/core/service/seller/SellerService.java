@@ -4,7 +4,7 @@ import cn.itcast.core.entity.PageResult;
 import cn.itcast.core.entity.Result;
 import cn.itcast.core.pojo.seller.Seller;
 
-public interface sellerService {
+public interface SellerService {
     /**
      * 商家入驻
      * @param seller

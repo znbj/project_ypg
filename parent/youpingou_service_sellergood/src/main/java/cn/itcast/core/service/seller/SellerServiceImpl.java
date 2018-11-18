@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 @Service
-public class SellerServiceImpl implements sellerService{
+public class SellerServiceImpl implements SellerService{
     @Resource
     private SellerDao sellerDao;
 

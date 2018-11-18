@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class specServiceImpl implements specService {
+public class specServiceImpl implements SpecService {
 
     @Resource
     SpecificationDao specificationDao;

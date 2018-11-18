@@ -7,7 +7,7 @@ import cn.itcast.core.vo.specificationVo;
 import java.util.List;
 import java.util.Map;
 
-public interface specService {
+public interface SpecService {
 
     /**
      * 分页查询

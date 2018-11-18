@@ -3,7 +3,7 @@ package cn.itcast.core.controller.spec;
 import cn.itcast.core.entity.PageResult;
 import cn.itcast.core.entity.Result;
 import cn.itcast.core.pojo.specification.Specification;
-import cn.itcast.core.service.spec.specService;
+import cn.itcast.core.service.spec.SpecService;
 import cn.itcast.core.vo.specificationVo;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +17,7 @@ import java.util.Map;
 @RequestMapping("/specification")
 public class specController {
     @Reference
-    specService specService;
+    SpecService specService;
 
     @RequestMapping("/findPage.do")
     public PageResult findPage(Integer page,Integer rows){
