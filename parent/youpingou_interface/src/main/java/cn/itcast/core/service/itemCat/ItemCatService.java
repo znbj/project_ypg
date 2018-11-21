@@ -11,4 +11,8 @@ public interface ItemCatService {
      * @return
      */
     List<ItemCat> findByParentId(Long parentId);
+
+    ItemCat findOne(Long id);
+
+    List<ItemCat> findAll();
 }

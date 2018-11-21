@@ -3,6 +3,9 @@ package cn.itcast.core.service.tempalte;
 import cn.itcast.core.entity.PageResult;
 import cn.itcast.core.pojo.template.TypeTemplate;
 
+import java.util.List;
+import java.util.Map;
+
 public interface Type_TemplateService {
     /**
      * 条件查询
@@ -22,4 +25,7 @@ public interface Type_TemplateService {
     void delete(Long[] ids);
     //
     TypeTemplate findOne(Long id);
+
+
+    List<Map> findBySpecList(long id);
 }
