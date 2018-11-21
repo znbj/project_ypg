@@ -18,14 +18,21 @@ public class Type_TemplateController {
     @Reference
     private Type_TemplateService type_templateService;
 
-
-
-
+    /**
+     * 根据模板id 查询品牌
+     * @param id
+     * @return
+     */
     @RequestMapping("/findOne.do")
     public TypeTemplate findOne(Long id) {
         return type_templateService.findOne(id);
     }
 
+    /**
+     * 查询规格列表
+     * @param id
+     * @return
+     */
     @RequestMapping("/findBySpecList.do")
     public List<Map> findBySpecList(long id) {
     return type_templateService.findBySpecList(id);

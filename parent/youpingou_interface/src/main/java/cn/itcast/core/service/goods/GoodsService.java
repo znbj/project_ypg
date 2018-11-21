@@ -11,7 +11,15 @@ public interface GoodsService {
      */
     void add(GoodsVo goodsVo);
 
-    Goods findOne(Long id);
+    GoodsVo findOne(Long id);
 
     PageResult search(Integer page, Integer rows, Goods goods);
+
+    void update(GoodsVo goodsVo);
+    //运营商
+    PageResult searchForManager(Integer page, Integer rows, Goods goods);
+    //运营商
+    void updateStatus(Long[] ids, String status);
+
+    void delete(Long[] ids,String status);
 }

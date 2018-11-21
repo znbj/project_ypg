@@ -11,6 +11,7 @@ import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.good.GoodsDesc;
 import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.item.Item;
+import cn.itcast.core.pojo.item.ItemQuery;
 import cn.itcast.core.vo.GoodsVo;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
@@ -89,41 +90,144 @@ public class GoodsServiceImpl implements GoodsService {
 
     }
 
+    /**
+     * 修改商品回显
+     * @param id
+     * @return
+     */
     @Override
-    public Goods findOne(Long id) {
-        return goodsDao.selectByPrimaryKey(id);
+    public GoodsVo findOne(Long id) {
+        GoodsVo goodsVo = new GoodsVo();
+        Goods goods = goodsDao.selectByPrimaryKey(id);
+        goodsVo.setGoods(goods);
+        GoodsDesc goodsDesc = goodsDescDao.selectByPrimaryKey(id);
+        goodsVo.setGoodsDesc(goodsDesc);
+        ItemQuery itemQuery = new ItemQuery();
+        itemQuery.createCriteria().andGoodsIdEqualTo(id);
+        List<Item> items = itemDao.selectByExample(itemQuery);
+        goodsVo.setItemList(items);
+        return goodsVo;
     }
 
     @Override
     public PageResult search(Integer page, Integer rows, Goods goods) {
         PageHelper.startPage(page,rows);
         GoodsQuery goodsQuery = new GoodsQuery();
-        goodsQuery.setOrderByClause("id desc");
-        if (goods.getSellerId() != null && !"".equals(goods.getGoodsName().trim())) {
-            goodsQuery.createCriteria().andSellerIdEqualTo(goods.getGoodsName().trim());
+        if (goods.getGoodsName() != null && !"".equals(goods.getGoodsName().trim())) {
+            goodsQuery.createCriteria().andGoodsNameLike("%"+goods.getGoodsName().trim()+"%");
         }
+        goodsQuery.setOrderByClause("id desc");
         Page<Goods> pag= (Page<Goods>) goodsDao.selectByExample(goodsQuery);
-
         return new  PageResult(pag.getTotal(),pag.getResult());
+    }
+    @Transactional
+    @Override
+    public void update(GoodsVo goodsVo) {
+        Goods goods = goodsVo.getGoods();
+        goodsDao.updateByPrimaryKeySelective(goods);
+        GoodsDesc goodsDesc = goodsVo.getGoodsDesc();
+        goodsDescDao.updateByPrimaryKeySelective(goodsDesc);
+        ItemQuery itemQuery = new ItemQuery();
+        itemQuery.createCriteria().andGoodsIdEqualTo(goods.getId());
+        itemDao.deleteByExample(itemQuery);
+        //保存库存
+        if ("1".equals(goods.getIsEnableSpec())) {
+            //一对多
+            List<Item> itemList = goodsVo.getItemList();
+            for (Item item : itemList) {
+                String title = goods.getGoodsName();
+                Map<String, String> map = JSON.parseObject(item.getSpec(), Map.class);
+                Set<Map.Entry<String, String>> entrySet = map.entrySet();
+                for (Map.Entry<String, String> entry : entrySet) {
+                    title += "" + entry.getValue();
+                }
+                item.setTitle(title);
+                //定义共同方法
+                setAttributeForItem(goods,goodsDesc,item);
+                itemDao.insertSelective(item);
+            }
+        } else {
+            //一对一
+            Item item = new Item();
+            item.setTitle(goods.getGoodsName()+ " " + goods.getCaption());
+            item.setPrice(goods.getPrice());
+            item.setStatus("1"); // 可用的状态
+            item.setNum(9999);
+            item.setIsDefault("1");
+            item.setSpec("{}");
+            //
+            setAttributeForItem(goods,goodsDesc,item);
+            itemDao.insertSelective(item);
+
+        }
+
+
+    }
+
+    @Override
+    public PageResult searchForManager(Integer page, Integer rows, Goods goods) {
+        PageHelper.startPage(page,rows);
+        GoodsQuery goodsQuery = new GoodsQuery();
+        if (goods.getAuditStatus() != null && !"".equals(goods.getAuditStatus().trim())) {
+            goodsQuery.createCriteria().andIsDeleteIsNull();
+        }
+        goodsQuery.setOrderByClause("id desc");
+        Page<Goods> pag= (Page<Goods>) goodsDao.selectByExample(goodsQuery);
+        return new  PageResult(pag.getTotal(),pag.getResult());
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        if (ids != null && ids.length > 0) {
+            Goods goods = new Goods();
+            goods.setAuditStatus(status);
+            for (Long id : ids) {
+                goods.setId(id);
+                goodsDao.updateByPrimaryKeySelective(goods);
+                if ("1".equals(status)) {
+                    // TODO:将商品保存到索引库
+                    // TODO:生成商品详情的静态页
+
+                }
+            }
+        }
+    }
+
+    @Override
+    public void delete(Long[] ids, String status) {
+        if (ids != null && ids.length > 0) {
+            Goods goods = new Goods();
+            goods.setAuditStatus(status);
+            for (Long id : ids) {
+                goods.setId(id);
+                goodsDao.updateByPrimaryKeySelective(goods);
+                if ("1".equals(status)) {
+                    // TODO:将商品保存到索引库
+                    // TODO:生成商品详情的静态页
+
+                }
+            }
+        }
     }
 
 
     private void setAttributeForItem(Goods goods, GoodsDesc goodsDesc, Item item) {
-        List<Map> list = JSON.parseArray(goodsDesc.getItemImages(), Map.class);
-        if (list != null && list.size() >0) {
-            String image = list.get(0).get("url").toString();
-            item.setImage(image);
+        // 商品图片：
+        // 测试数据：[{"color":"粉色","url":"http://192.168.25.133/group1/M00/00/00/wKgZhVmOXq2AFIs5AAgawLS1G5Y004.jpg"},
+        // {"color":"黑色","url":"http://192.168.25.133/group1/M00/00/00/wKgZhVmOXrWAcIsOAAETwD7A1Is874.jpg"}]
+        String itemImages = goodsDesc.getItemImages();
+        List<Map> images = JSON.parseArray(itemImages, Map.class);
+        if(images != null && images.size() > 0){
+            String image = images.get(0).get("url").toString();
+            item.setImage(image); // 商品图片
         }
-        item.setCategoryid(goods.getCategory3Id());
-        item.setStatus("1");
-        item.setCreateTime(new Date());
-        item.setUpdateTime(new Date());
-        item.setGoodsId(goods.getId());
-        String sellerId = goods.getSellerId();
-        item.setSellerId(sellerId);
-        item.setSeller(sellerDao.selectByPrimaryKey(sellerId).getNickName());
-        item.setCategory(itemCatDao.selectByPrimaryKey(goods.getCategory3Id()).getName());
-        item.setBrand(brandDao.selectByPrimaryKey(goods.getBrandId()).getName());
-
+        item.setCategoryid(goods.getCategory3Id()); // 商品的三级分类id
+        item.setCreateTime(new Date()); // 创建日期
+        item.setUpdateTime(new Date()); // 更新日期
+        item.setGoodsId(goods.getId()); // 商品id
+        item.setSellerId(goods.getSellerId()); // 商家id
+        item.setCategory(itemCatDao.selectByPrimaryKey(goods.getCategory3Id()).getName()); // 分类名称
+        item.setBrand(brandDao.selectByPrimaryKey(goods.getBrandId()).getName());   // 品牌名称
+        item.setSeller(sellerDao.selectByPrimaryKey(goods.getSellerId()).getNickName()); // 店铺名称
     }
 }

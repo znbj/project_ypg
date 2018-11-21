@@ -76,8 +76,8 @@ public class Type_TemplateImpl implements Type_TemplateService {
     @Override
     public List<Map> findBySpecList(long id) {
         TypeTemplate typeTemplate = typeTemplateDao.selectByPrimaryKey(id);
-        String brandIds = typeTemplate.getBrandIds();
-        List<Map> list = JSON.parseArray(brandIds, Map.class);
+        String specIds = typeTemplate.getSpecIds();
+        List<Map> list = JSON.parseArray(specIds, Map.class);
         for (Map map : list) {
             String specId = map.get("id").toString();
             SpecificationOptionQuery specificationOptionQuery = new SpecificationOptionQuery();
