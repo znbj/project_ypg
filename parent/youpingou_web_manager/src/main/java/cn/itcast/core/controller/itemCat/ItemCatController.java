@@ -20,4 +20,12 @@ public class ItemCatController {
         return itemCatService.findByParentId(parentId);
     }
 
+    /**
+     * 回显具体的分类名称
+     * @return
+     */
+    @RequestMapping("/findAll.do")
+    public List<ItemCat> findAll(){
+        return itemCatService.findAll();
+    }
 }

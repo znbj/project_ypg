@@ -4,7 +4,6 @@ import java.util.List;
 
 import cn.itcast.core.entity.PageResult;
 import cn.itcast.core.pojo.ad.ContentQuery;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -12,13 +11,18 @@ import com.github.pagehelper.PageHelper;
 
 import cn.itcast.core.dao.ad.ContentDao;
 import cn.itcast.core.pojo.ad.Content;
+import org.springframework.data.redis.core.RedisTemplate;
+import javax.annotation.Resource;
 
 
 @Service
 public class ContentServiceImpl implements ContentService {
 
-	@Autowired
+	@Resource
 	private ContentDao contentDao;
+
+	@Resource
+	private RedisTemplate redisTemplate;
 
 	@Override
 	public List<Content> findAll() {
@@ -35,11 +39,20 @@ public class ContentServiceImpl implements ContentService {
 
 	@Override
 	public void add(Content content) {
+		clearCache(content.getCategoryId());
 		contentDao.insertSelective(content);
 	}
 
 	@Override
 	public void edit(Content content) {
+		Long newCategoryId = content.getCategoryId();
+		Long oldCategoryId = contentDao.selectByPrimaryKey(content.getId()).getCategoryId();
+		if (oldCategoryId != newCategoryId) {
+			clearCache(oldCategoryId);
+			clearCache(newCategoryId);
+		} else {
+			clearCache(newCategoryId);
+		}
 		contentDao.updateByPrimaryKeySelective(content);
 	}
 
@@ -53,6 +66,7 @@ public class ContentServiceImpl implements ContentService {
 	public void delAll(Long[] ids) {
 		if(ids != null){
 			for(Long id : ids){
+				clearCache(contentDao.selectByPrimaryKey(id).getCategoryId());
 				contentDao.deleteByPrimaryKey(id);
 			}
 		}
@@ -60,11 +74,22 @@ public class ContentServiceImpl implements ContentService {
 
 	@Override
 	public List<Content> findByCategoryId(Long categoryId) {
-        ContentQuery contentQuery = new ContentQuery();
-        contentQuery.createCriteria().andCategoryIdEqualTo(categoryId);
-        List<Content> contents = contentDao.selectByExample(contentQuery);
-        return contents;
+		List<Content> list = (List<Content>) redisTemplate.boundHashOps("content").get(categoryId);
+		if (list == null) {
+			synchronized (this) {
+				list = (List<Content>) redisTemplate.boundHashOps("content").get(categoryId);
+				if (list == null) {
+					ContentQuery contentQuery = new ContentQuery();
+					contentQuery.createCriteria().andCategoryIdEqualTo(categoryId);
+					list = contentDao.selectByExample(contentQuery);
+					redisTemplate.boundHashOps("content").put(categoryId, list);
+				}
+			}
+		}
+		return list;
 	}
 
-
+	private void clearCache(Long categoryId) {
+		redisTemplate.boundHashOps("content").delete(categoryId);
+	}
 }

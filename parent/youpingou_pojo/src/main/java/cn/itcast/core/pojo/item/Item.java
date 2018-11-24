@@ -1,28 +1,36 @@
 package cn.itcast.core.pojo.item;
 
+import org.apache.solr.client.solrj.beans.Field;
+import org.springframework.data.solr.core.mapping.Dynamic;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 public class Item implements Serializable {
     /**
      * 商品id，同时也是商品编号
      */
+    @Field
     private Long id;
 
     /**
      * 商品标题
      */
+    @Field("item_title")
     private String title;
 
     /**
      * 商品卖点
      */
+
     private String sellPoint;
 
     /**
      * 商品价格，单位为：元
      */
+    @Field("item_price")
     private BigDecimal price;
 
     private Integer stockCount;
@@ -40,6 +48,7 @@ public class Item implements Serializable {
     /**
      * 商品图片
      */
+    @Field("item_image")
     private String image;
 
     /**
@@ -60,6 +69,7 @@ public class Item implements Serializable {
     /**
      * 更新时间
      */
+    @Field("item_updatetime")
     private Date updateTime;
 
     private String itemSn;
@@ -70,19 +80,35 @@ public class Item implements Serializable {
 
     private String isDefault;
 
+    @Field("item_goodsid")
     private Long goodsId;
 
     private String sellerId;
 
     private String cartThumbnail;
 
+    @Field("item_category")
     private String category;
 
+    @Field("item_brand")
     private String brand;
 
     private String spec;
 
+    @Field("item_seller")
     private String seller;
+
+    @Dynamic
+    @Field("item_spec_*")
+    private Map<String,String> map;
+
+    public Map<String, String> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, String> map) {
+        this.map = map;
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -317,28 +343,28 @@ public class Item implements Serializable {
         }
         Item other = (Item) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getTitle() == null ? other.getTitle() == null : this.getTitle().equals(other.getTitle()))
-            && (this.getSellPoint() == null ? other.getSellPoint() == null : this.getSellPoint().equals(other.getSellPoint()))
-            && (this.getPrice() == null ? other.getPrice() == null : this.getPrice().equals(other.getPrice()))
-            && (this.getStockCount() == null ? other.getStockCount() == null : this.getStockCount().equals(other.getStockCount()))
-            && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()))
-            && (this.getBarcode() == null ? other.getBarcode() == null : this.getBarcode().equals(other.getBarcode()))
-            && (this.getImage() == null ? other.getImage() == null : this.getImage().equals(other.getImage()))
-            && (this.getCategoryid() == null ? other.getCategoryid() == null : this.getCategoryid().equals(other.getCategoryid()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getItemSn() == null ? other.getItemSn() == null : this.getItemSn().equals(other.getItemSn()))
-            && (this.getCostPirce() == null ? other.getCostPirce() == null : this.getCostPirce().equals(other.getCostPirce()))
-            && (this.getMarketPrice() == null ? other.getMarketPrice() == null : this.getMarketPrice().equals(other.getMarketPrice()))
-            && (this.getIsDefault() == null ? other.getIsDefault() == null : this.getIsDefault().equals(other.getIsDefault()))
-            && (this.getGoodsId() == null ? other.getGoodsId() == null : this.getGoodsId().equals(other.getGoodsId()))
-            && (this.getSellerId() == null ? other.getSellerId() == null : this.getSellerId().equals(other.getSellerId()))
-            && (this.getCartThumbnail() == null ? other.getCartThumbnail() == null : this.getCartThumbnail().equals(other.getCartThumbnail()))
-            && (this.getCategory() == null ? other.getCategory() == null : this.getCategory().equals(other.getCategory()))
-            && (this.getBrand() == null ? other.getBrand() == null : this.getBrand().equals(other.getBrand()))
-            && (this.getSpec() == null ? other.getSpec() == null : this.getSpec().equals(other.getSpec()))
-            && (this.getSeller() == null ? other.getSeller() == null : this.getSeller().equals(other.getSeller()));
+                && (this.getTitle() == null ? other.getTitle() == null : this.getTitle().equals(other.getTitle()))
+                && (this.getSellPoint() == null ? other.getSellPoint() == null : this.getSellPoint().equals(other.getSellPoint()))
+                && (this.getPrice() == null ? other.getPrice() == null : this.getPrice().equals(other.getPrice()))
+                && (this.getStockCount() == null ? other.getStockCount() == null : this.getStockCount().equals(other.getStockCount()))
+                && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()))
+                && (this.getBarcode() == null ? other.getBarcode() == null : this.getBarcode().equals(other.getBarcode()))
+                && (this.getImage() == null ? other.getImage() == null : this.getImage().equals(other.getImage()))
+                && (this.getCategoryid() == null ? other.getCategoryid() == null : this.getCategoryid().equals(other.getCategoryid()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getItemSn() == null ? other.getItemSn() == null : this.getItemSn().equals(other.getItemSn()))
+                && (this.getCostPirce() == null ? other.getCostPirce() == null : this.getCostPirce().equals(other.getCostPirce()))
+                && (this.getMarketPrice() == null ? other.getMarketPrice() == null : this.getMarketPrice().equals(other.getMarketPrice()))
+                && (this.getIsDefault() == null ? other.getIsDefault() == null : this.getIsDefault().equals(other.getIsDefault()))
+                && (this.getGoodsId() == null ? other.getGoodsId() == null : this.getGoodsId().equals(other.getGoodsId()))
+                && (this.getSellerId() == null ? other.getSellerId() == null : this.getSellerId().equals(other.getSellerId()))
+                && (this.getCartThumbnail() == null ? other.getCartThumbnail() == null : this.getCartThumbnail().equals(other.getCartThumbnail()))
+                && (this.getCategory() == null ? other.getCategory() == null : this.getCategory().equals(other.getCategory()))
+                && (this.getBrand() == null ? other.getBrand() == null : this.getBrand().equals(other.getBrand()))
+                && (this.getSpec() == null ? other.getSpec() == null : this.getSpec().equals(other.getSpec()))
+                && (this.getSeller() == null ? other.getSeller() == null : this.getSeller().equals(other.getSeller()));
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -43,6 +44,8 @@ public class GoodsServiceImpl implements GoodsService {
     @Resource
     private BrandDao brandDao;
 
+    @Resource
+    private SolrTemplate solrTemplate;
     /**
      * 保存商品
      * @param goodsVo
@@ -186,10 +189,24 @@ public class GoodsServiceImpl implements GoodsService {
                 goodsDao.updateByPrimaryKeySelective(goods);
                 if ("1".equals(status)) {
                     // TODO:将商品保存到索引库
+                    dataImportToSolr();
                     // TODO:生成商品详情的静态页
 
                 }
             }
+        }
+    }
+
+    private void dataImportToSolr() {
+        List<Item> itemList = itemDao.selectByExample(null);
+        if (itemList != null && itemList.size() > 0) {
+            for (Item item : itemList) {
+                String spec = item.getSpec();
+                Map<String,String> map = JSON.parseObject(spec, Map.class);
+                item.setMap(map);
+            }
+            solrTemplate.saveBeans(itemList);
+            solrTemplate.commit();
         }
     }
 
