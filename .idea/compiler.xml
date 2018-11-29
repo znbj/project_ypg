@@ -11,6 +11,7 @@
         <module name="youpingou_interface" />
         <module name="youpingou_pojo" />
         <module name="youpingou_service_buyer" />
+        <module name="youpingou_service_page" />
         <module name="youpingou_service_search" />
         <module name="youpingou_service_sellergood" />
         <module name="youpingou_service_user" />
@@ -27,6 +28,7 @@
       <module name="youpingou_interface" target="1.7" />
       <module name="youpingou_pojo" target="1.7" />
       <module name="youpingou_service_buyer" target="1.7" />
+      <module name="youpingou_service_page" target="1.7" />
       <module name="youpingou_service_search" target="1.7" />
       <module name="youpingou_service_sellergood" target="1.7" />
       <module name="youpingou_service_user" target="1.7" />

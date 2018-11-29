@@ -18,9 +18,15 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.jms.core.JmsTemplate;
+
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.jms.*;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +52,12 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Resource
     private SolrTemplate solrTemplate;
+
+    @Resource
+    private JmsTemplate jmsTemplate;
+
+    @Resource
+    private Destination topicPageAndSolrDestination;
     /**
      * 保存商品
      * @param goodsVo
@@ -184,19 +196,32 @@ public class GoodsServiceImpl implements GoodsService {
         if (ids != null && ids.length > 0) {
             Goods goods = new Goods();
             goods.setAuditStatus(status);
-            for (Long id : ids) {
+            for (final Long id : ids) {
                 goods.setId(id);
                 goodsDao.updateByPrimaryKeySelective(goods);
                 if ("1".equals(status)) {
-                    // TODO:将商品保存到索引库
-                    dataImportToSolr();
-                    // TODO:生成商品详情的静态页
+                    //将商品保存到索引库
+                    //updateSolr(id);
+                    //dataImportToSolr();
+                    // 生成商品详情的静态页 ActiveMQ 管理 解耦
+                   jmsTemplate.send(topicPageAndSolrDestination, new MessageCreator() {
+                       @Override
+                       public Message createMessage(Session session) throws JMSException {
+                           // 将id封装成消息体进行发送
+                           TextMessage textMessage = session.createTextMessage(String.valueOf(id));
+                           return textMessage;
+                       }
+                   });
 
                 }
             }
         }
     }
 
+
+    /**
+     * 将数据库item表全部导入solr
+     */
     private void dataImportToSolr() {
         List<Item> itemList = itemDao.selectByExample(null);
         if (itemList != null && itemList.size() > 0) {
@@ -219,7 +244,10 @@ public class GoodsServiceImpl implements GoodsService {
                 goods.setId(id);
                 goodsDao.updateByPrimaryKeySelective(goods);
                 if ("1".equals(status)) {
-                    // TODO:将商品保存到索引库
+                    // :删除索引库数据
+                    SimpleQuery query = new SimpleQuery("item_goodsid:" + id);
+                    solrTemplate.delete(query);
+                    solrTemplate.commit();
                     // TODO:生成商品详情的静态页
 
                 }

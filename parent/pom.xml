@@ -21,6 +21,7 @@
         <module>youpingou_web_shop</module>
         <module>youpingou_web_user</module>
         <module>youpingou_service_sellergood</module>
+        <module>youpingou_service_page</module>
     </modules>
 
     <!-- 集中定义依赖版本号 -->

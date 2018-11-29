@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/parent/youpingou_interface/youpingou_interface.iml" filepath="$PROJECT_DIR$/parent/youpingou_interface/youpingou_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/youpingou_pojo/youpingou_pojo.iml" filepath="$PROJECT_DIR$/parent/youpingou_pojo/youpingou_pojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_buyer/youpingou_service_buyer.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_buyer/youpingou_service_buyer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_page/youpingou_service_page.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_page/youpingou_service_page.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_search/youpingou_service_search.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_search/youpingou_service_search.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_sellergood/youpingou_service_sellergood.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_sellergood/youpingou_service_sellergood.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/youpingou_service_user/youpingou_service_user.iml" filepath="$PROJECT_DIR$/parent/youpingou_service_user/youpingou_service_user.iml" />

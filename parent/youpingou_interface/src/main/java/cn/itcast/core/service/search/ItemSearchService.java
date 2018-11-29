@@ -10,4 +10,6 @@ public interface ItemSearchService {
      */
     public Map<String, Object> search(Map<String, String> searchMap);
 
+    public void updateSolr(long id);
+
 }

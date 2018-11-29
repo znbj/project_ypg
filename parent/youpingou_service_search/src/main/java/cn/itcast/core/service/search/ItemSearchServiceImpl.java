@@ -1,7 +1,10 @@
 package cn.itcast.core.service.search;
 
+import cn.itcast.core.dao.item.ItemDao;
 import cn.itcast.core.pojo.item.Item;
+import cn.itcast.core.pojo.item.ItemQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.solr.core.SolrTemplate;
@@ -9,10 +12,7 @@ import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ItemSearchServiceImpl implements ItemSearchService {
@@ -23,6 +23,9 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+
+    @Resource
+    private ItemDao itemDao;
     /**
      * 前台系统的检索
      *
@@ -50,7 +53,24 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         return resultMap;
     }
 
-//    // 默认查询第一个分类下的品牌以及规格
+    @Override
+    public void updateSolr(long id) {
+        ItemQuery itemQuery = new ItemQuery();
+        itemQuery.createCriteria().andStatusEqualTo("1").andIsDefaultEqualTo("1")
+                .andGoodsIdEqualTo(id);
+
+        List<Item> itemList = itemDao.selectByExample(itemQuery);
+        for (Item item : itemList) {
+            String spec = item.getSpec();
+            Map map = JSON.parseObject(spec, Map.class);
+            item.setMap(map);
+        }
+
+        solrTemplate.saveBeans(itemList);
+        solrTemplate.commit();
+    }
+
+    //    // 默认查询第一个分类下的品牌以及规格
     private Map<String,Object> searchBrandAndSpecByCategory(String category) {
         // 根据分类获取模板id
         Object typeId = redisTemplate.boundHashOps("itemCat").get(category);
@@ -95,9 +115,17 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
     // 根据关键字检索并且分页,而且关键字高亮显示
     private Map<String, Object> searchForHighLightPage(Map<String, String> searchMap) {
+
         // 封装检索条件
         Criteria criteria = new Criteria("item_keywords");
         String keywords = searchMap.get("keywords");
+        //处理关键字
+        if (keywords != null && !"".equals(keywords)) {
+            //去空格
+            String replace = keywords.replace(" ", "");
+            searchMap.put("keywords", replace);
+
+        }
         if (keywords != null && !"".equals(keywords)) {
             criteria.is(keywords);
         }
@@ -114,6 +142,45 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         highlightOptions.setSimplePrefix("<font color='red'>");
         highlightOptions.setSimplePostfix("</font>");
         query.setHighlightOptions(highlightOptions);
+
+
+        //根据商品过滤
+        String category = searchMap.get("category");
+        if (category != null && !"".equals(category)) {
+            Criteria cri = new Criteria(category);
+            cri.is(category);
+            SimpleFilterQuery simpleFilterQuery = new SimpleFilterQuery(cri);
+            query.addFilterQuery(simpleFilterQuery);
+        }
+        //根据品牌价格 过滤
+        String brand = searchMap.get("brand");
+        if (brand != null && !"".equals(brand)) {
+            Criteria cri = new Criteria("item_brand");
+            cri.is(brand);
+            SimpleFilterQuery simpleFilterQuery = new SimpleFilterQuery(cri);
+            query.addFilterQuery(simpleFilterQuery);
+        }
+
+        String price = searchMap.get("price");
+        if (price != null && !"".equals(price)) {
+            String[] split = price.split("-");
+            Criteria cri = new Criteria("item_price");
+            cri.between(split[0], split[1], true, false);
+            SimpleFilterQuery simpleFilterQuery = new SimpleFilterQuery(cri);
+            query.addFilterQuery(simpleFilterQuery);
+        }
+        //根据分类过滤
+        String spec = searchMap.get("spec");
+        if (spec != null && !"".equals(spec)) {
+            Map<String,String> map = JSON.parseObject(spec, Map.class);
+            Set<Map.Entry<String, String>> entrySet = map.entrySet();
+            for (Map.Entry<String, String> entry : entrySet) {
+                Criteria cri = new Criteria("item_spec_" + entry.getKey());
+                cri.is(entry.getValue());
+                SimpleFilterQuery simpleFilterQuery = new SimpleFilterQuery(cri);
+                query.addFilterQuery(simpleFilterQuery);
+            }
+        }
 
         // 根据条件查询
         HighlightPage<Item> highlightPage = solrTemplate.queryForHighlightPage(query, Item.class);
@@ -163,4 +230,6 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         goodsMap.put("rows", scoredPage.getContent());          // 结果集
         return goodsMap;
     }
+
+
 }

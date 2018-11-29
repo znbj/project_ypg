@@ -2,6 +2,7 @@
 <project version="4">
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/parent/youpingou_service_buyer" />
+    <file type="web" url="file://$PROJECT_DIR$/parent/youpingou_service_page" />
     <file type="web" url="file://$PROJECT_DIR$/parent/youpingou_service_search" />
     <file type="web" url="file://$PROJECT_DIR$/parent/youpingou_service_sellergood" />
     <file type="web" url="file://$PROJECT_DIR$/parent/youpingou_service_user" />
