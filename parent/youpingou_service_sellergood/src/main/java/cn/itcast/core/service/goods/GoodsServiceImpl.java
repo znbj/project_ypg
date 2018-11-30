@@ -58,6 +58,9 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Resource
     private Destination topicPageAndSolrDestination;
+
+    @Resource
+    private Destination queueSolrDeleteDestination;
     /**
      * 保存商品
      * @param goodsVo
@@ -239,16 +242,25 @@ public class GoodsServiceImpl implements GoodsService {
     public void delete(Long[] ids, String status) {
         if (ids != null && ids.length > 0) {
             Goods goods = new Goods();
-            goods.setAuditStatus(status);
-            for (Long id : ids) {
+            status = "1";
+            goods.setIsDelete(status);
+            for (final Long id : ids) {
                 goods.setId(id);
                 goodsDao.updateByPrimaryKeySelective(goods);
                 if ("1".equals(status)) {
                     // :删除索引库数据
-                    SimpleQuery query = new SimpleQuery("item_goodsid:" + id);
-                    solrTemplate.delete(query);
-                    solrTemplate.commit();
-                    // TODO:生成商品详情的静态页
+//                    SimpleQuery query = new SimpleQuery("item_goodsid:" + id);
+//                    solrTemplate.delete(query);
+//                    solrTemplate.commit();
+
+
+                    jmsTemplate.send(queueSolrDeleteDestination, new MessageCreator() {
+                        @Override
+                        public Message createMessage(Session session) throws JMSException {
+                            TextMessage textMessage = session.createTextMessage(String.valueOf(id));
+                            return textMessage;
+                        }
+                    });
 
                 }
             }

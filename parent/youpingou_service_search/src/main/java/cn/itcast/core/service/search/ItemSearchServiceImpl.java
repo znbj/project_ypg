@@ -70,6 +70,13 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         solrTemplate.commit();
     }
 
+    @Override
+    public void deleteItemFromSolr(Long id) {
+        SimpleQuery query = new SimpleQuery("item_goodsid:" + id);
+        solrTemplate.delete(query);
+        solrTemplate.commit();
+    }
+
     //    // 默认查询第一个分类下的品牌以及规格
     private Map<String,Object> searchBrandAndSpecByCategory(String category) {
         // 根据分类获取模板id

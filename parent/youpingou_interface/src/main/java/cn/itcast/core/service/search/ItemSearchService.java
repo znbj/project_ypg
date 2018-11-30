@@ -12,4 +12,6 @@ public interface ItemSearchService {
 
     public void updateSolr(long id);
 
+    public void deleteItemFromSolr(Long id);
+
 }

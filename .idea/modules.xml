@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/itcast-sms/itcast-sms.iml" filepath="$PROJECT_DIR$/itcast-sms/itcast-sms.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/parent.iml" filepath="$PROJECT_DIR$/parent/parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/youpingou_common/youpingou_common.iml" filepath="$PROJECT_DIR$/parent/youpingou_common/youpingou_common.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/youpingou_dao/youpingou_dao.iml" filepath="$PROJECT_DIR$/parent/youpingou_dao/youpingou_dao.iml" />

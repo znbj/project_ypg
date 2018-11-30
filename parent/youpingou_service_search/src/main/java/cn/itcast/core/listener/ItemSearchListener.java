@@ -11,8 +11,8 @@ import javax.jms.MessageListener;
 
 public class ItemSearchListener implements MessageListener {
 
-        @Resource
-        private ItemSearchService itemSearchService;
+    @Resource
+    private ItemSearchService itemSearchService;
 
     @Override
     public void onMessage(Message message) {
@@ -25,6 +25,7 @@ public class ItemSearchListener implements MessageListener {
         } catch (JMSException e) {
             e.printStackTrace();
         }
-
     }
+
+
 }
