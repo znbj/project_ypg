@@ -38,9 +38,9 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- <context-param>
+  <context-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:spring/spring-security.xml</param-value>
+      <param-value>classpath:spring/spring-security-cas.xml</param-value>
   </context-param>
   <listener>
       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -53,7 +53,7 @@
   <filter-mapping>
       <filter-name>springSecurityFilterChain</filter-name>
       <url-pattern>/*</url-pattern>
-  </filter-mapping> -->
+  </filter-mapping>
 
   <welcome-file-list>
     <welcome-file>home-index.html</welcome-file>
