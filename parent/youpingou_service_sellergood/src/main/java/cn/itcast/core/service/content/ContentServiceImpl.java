@@ -72,6 +72,11 @@ public class ContentServiceImpl implements ContentService {
 		}
 	}
 
+	/**
+	 * 从redis缓存拿数据
+	 * @param categoryId
+	 * @return
+	 */
 	@Override
 	public List<Content> findByCategoryId(Long categoryId) {
 		List<Content> list = (List<Content>) redisTemplate.boundHashOps("content").get(categoryId);

@@ -16,6 +16,8 @@
           <element id="archive" name="youpingou_common-1.0-SNAPSHOT.jar">
             <element id="module-output" name="youpingou_common" />
           </element>
+          <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
+          <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.4.01" />
           <element id="library" level="project" name="Maven: com.github.pagehelper:pagehelper:4.0.0" />
           <element id="library" level="project" name="Maven: com.github.jsqlparser:jsqlparser:0.9.1" />
           <element id="library" level="project" name="Maven: org.mybatis:mybatis:3.2.8" />
@@ -80,7 +82,6 @@
           <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.1" />
           <element id="library" level="project" name="Maven: velocity:velocity:1.5" />
           <element id="library" level="project" name="Maven: org.owasp.esapi:esapi:2.0GA" />
-          <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.4.01" />
           <element id="library" level="project" name="Maven: xerces:xercesImpl:2.10.0" />
           <element id="library" level="project" name="Maven: xml-resolver:xml-resolver:1.2" />
           <element id="library" level="project" name="Maven: xalan:xalan:2.7.1" />
